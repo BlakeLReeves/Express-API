@@ -3,13 +3,9 @@
     "user": "Blake",
     "text": "Hello Express!"
   },
-  "3": {
-    "user": "Kyle",
-    "text": "I love Call of Duty!"
-  },
   "4": {
     "user": "Robin",
-    "text": "I love my dogs!"
+    "text": "I work at a pre-school."
   },
   "nextid": 5
 }
