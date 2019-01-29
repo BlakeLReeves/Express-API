@@ -1,25 +1,97 @@
+const displayChirps = (data) => {
+    let chirps = Object.keys(data).map(key => {
+        return {
+            id: key,
+            user: data[key].user,
+            text: data[key].text
+        };
+    });
+    console.log(chirps);
+    chirps.pop();
+    chirps.reverse();
+    chirps.forEach(chirp => {
+        $(`.getChirps`).append(`
+            <div class="card m-2">
+                <div class="card-body">
+                    <button onClick="deleteChirp(${chirp.id})" id="deleteChirp">X</button> 
+                    <div class="card-title border border-dark border-top-0 border-left-0 border-right-0">${chirp.user} Chirped!</div>
+                    <div class="card-text">${chirp.text}</div>
+                    <div class="card-footer mt-2">${chirp.id}</div>
+                    <button type="button" class="btn btn-primary mt-2" data-toggle="modal" data-target="#exampleModal">
+                        Edit Chirp
+                    </button>
+                </div>
+            </div>
+                
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                        <input type="text" placeholder="Username" id="editUserInput">
+                        <input type="text" placeholder="What's happening?" id="editChirpInput">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button onClick="editChirp(${chirp.id})" type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `);
+    })
+};
+
+const deleteChirp = (id) => {
+    $.ajax({
+        type: "DELETE",
+        url: `/api/chirps/${id}`
+    })
+        .then(data => displayChirps(data));
+};
+
+const editChirp = (id) => {
+    let editUserInput = $(`#editUserInput`).val();
+    console.log(editUserInput);
+    let editChirpInput = $(`#editChirpInput`).val();
+    console.log(editChirpInput);
+    let data = {
+        user: `${editUserInput}`,
+        text: `${editChirpInput}`
+    }
+    $.ajax({
+        type: "PUT",
+        url: `/api/chirps/${id}`,
+        data
+    })
+        .then(data => displayChirps(data));
+};
+
 $.ajax({
-    method: "GET",
+    type: "GET",
     url: "/api/chirps"
 })
-    .then(data => {
+    .then(data => displayChirps(data));
 
-        let chirps = Object.keys(data).map(key => {
-            return {
-                id: key,
-                user: data[key],
-                text: data[key]
-            };
-        });
-        console.log(chirps);
-        let card = [
-            `<div class="card">
-                <div class="card-body">
-                    <div class="card-title">${chirps.user}</div>
-                    <div class="card-text">${chirps.text}</div>
-                    <div class="card-footer">${chirps.id}</div>
-                </div>
-            </div>`
-        ]
-        $(`.getChirps`).append(card);
-    });
+$(`#submitChirp`).click((e) => {
+    e.preventDefault();
+    let userInput = $(`#userInput`).val();
+    console.log(userInput);
+    let chirpInput = $(`#chirpInput`).val();
+    console.log(chirpInput);
+    let data = {
+        user: `${userInput}`,
+        text: `${chirpInput}`
+    }
+    $.ajax({
+        type: "POST",
+        url: "/api/chirps",
+        data
+    })
+        .then(data => displayChirps(data))
+});
