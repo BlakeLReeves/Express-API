@@ -1,4 +1,5 @@
 const displayChirps = (data) => {
+    $(`.getChirps`).empty();
     let chirps = Object.keys(data).map(key => {
         return {
             id: key,
@@ -17,13 +18,13 @@ const displayChirps = (data) => {
                     <div class="card-title border border-dark border-top-0 border-left-0 border-right-0">${chirp.user} Chirped!</div>
                     <div class="card-text">${chirp.text}</div>
                     <div class="card-footer mt-2">${chirp.id}</div>
-                    <button type="button" class="btn btn-primary mt-2" data-toggle="modal" data-target="#exampleModal">
+                    <button type="button" class="btn btn-primary mt-2" data-toggle="modal" data-target="#chirpModal${chirp.id}">
                         Edit Chirp
                     </button>
                 </div>
             </div>
                 
-            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="chirpModal${chirp.id}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -33,12 +34,12 @@ const displayChirps = (data) => {
                             </button>
                         </div>
                         <div class="modal-body">
-                        <input type="text" placeholder="Username" id="editUserInput">
-                        <input type="text" placeholder="What's happening?" id="editChirpInput">
+                        <input type="text" placeholder="Username" id="editUserInput${chirp.id}">
+                        <input type="text" placeholder="What's happening?" id="editChirpInput${chirp.id}">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button onClick="editChirp(${chirp.id})" type="button" class="btn btn-primary">Save changes</button>
+                            <button data-dismiss="modal" onClick="editChirp(${chirp.id})" type="button" class="btn btn-primary">Save changes</button>
                         </div>
                     </div>
                 </div>
@@ -56,10 +57,11 @@ const deleteChirp = (id) => {
 };
 
 const editChirp = (id) => {
-    let editUserInput = $(`#editUserInput`).val();
+    let editUserInput = $(`#editUserInput${id}`).val();
     console.log(editUserInput);
-    let editChirpInput = $(`#editChirpInput`).val();
+    let editChirpInput = $(`#editChirpInput${id}`).val();
     console.log(editChirpInput);
+    console.log(id);
     let data = {
         user: `${editUserInput}`,
         text: `${editChirpInput}`

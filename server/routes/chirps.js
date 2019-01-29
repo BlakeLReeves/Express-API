@@ -14,22 +14,22 @@ router.get('/:id?', (req, res) => {
 
 router.post('/', (req, res) => {
     chirpStore.CreateChirp(req.body);
-    res.sendStatus(200);
+    res.send(chirpStore.GetChirps());
 });
 
 router.put('/:id', (req, res) => {
     let id = req.params.id;
     let chirp = req.body;
 
-    res.json(chirpStore.UpdateChirp(id, chirp));
-    res.sendStatus(200);
+    chirpStore.UpdateChirp(id, chirp);
+    res.send(chirpStore.GetChirps());
 });
 
 router.delete('/:id', (req, res) => {
     let id = req.params.id
 
-    res.json(chirpStore.DeleteChirp(id));
-    res.sendStatus(200);
+    chirpStore.DeleteChirp(id);
+    res.send(chirpStore.GetChirps());
 });
 
 module.exports = router;
